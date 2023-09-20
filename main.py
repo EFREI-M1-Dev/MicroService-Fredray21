@@ -16,18 +16,14 @@ def create_post(body = None, title = None):
     url = baseUrl + "posts"
     data = {
         "body": body,
-        "title": title,
-        "userId": 1
+        "title": title
     }
     response = requests.post(url, data)
     return response.json()
 
 
-
 def main():
-
     isValid = False
-
     while not isValid:
         # menu to choose what to do (getPost, getUsers, createPost)
         print("=====================================")
