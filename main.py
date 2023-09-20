@@ -1,18 +1,24 @@
 import requests
+from fastapi import FastAPI
+import uvicorn
 
+app = FastAPI()
 baseUrl = "https://jsonplaceholder.typicode.com/"
 
-def get_posts():
-    url = baseUrl + "posts?_limit=5"
+@app.get("/posts")
+def get_posts(limit: int = 5):
+    url = baseUrl + f"posts?_limit={limit}"
     response = requests.get(url)
     return response.json()
 
-def get_users():
-    url = baseUrl + "users?_limit=5"
+@app.get("/users")
+def get_users(limit: int = 5):
+    url = baseUrl + f"users?_limit={limit}"
     response = requests.get(url)
     return response.json()
 
-def create_post(body = None, title = None):
+@app.post("/create_post")
+def create_post(body: str, title: str):
     url = baseUrl + "posts"
     data = {
         "body": body,
@@ -21,38 +27,5 @@ def create_post(body = None, title = None):
     response = requests.post(url, data)
     return response.json()
 
-
-def main():
-    isValid = False
-    while not isValid:
-        # menu to choose what to do (getPost, getUsers, createPost)
-        print("=====================================")
-        print("1. Get Posts")
-        print("2. Get Users")
-        print("3. Create Post")
-        print("=====================================")
-        choice = input("Enter your choice: ")
-        match choice:
-            case "1":
-                isValid = True
-                posts = get_posts()
-                print("Posts:")
-                for post in posts:
-                    print("Post N°"+str(post['id'])+": "+post['title'])
-            case "2":
-                isValid = True
-                print("Users:")
-                users = get_users()
-                for user in users:
-                    print("User N°"+str(user['id'])+": "+user['name'])
-            case "3":
-                isValid = True
-                print("Create post:")
-                body = input("Enter body:")
-                title = input("Enter title:")
-                post = create_post(body, title)
-                print("Id du nouveau post: " + str(post['id']))
-            case _:
-                print("Invalid choice")
-
-main()
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
