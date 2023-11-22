@@ -4,12 +4,14 @@ from databases import Database
 import os
 
 # DATABASE_URL = 'postgresql://postgres:root@localhost/movie_db'
-
+# get the database uri from the environment variable
 DATABASE_URI = os.getenv('DATABASE_URI')
 
+# create the engine and metadata
 engine = create_engine(DATABASE_URI)
 metadata = MetaData()
 
+# create the casts table
 movies = Table(
     'movies',
     metadata,
@@ -20,4 +22,5 @@ movies = Table(
     Column('casts_id', ARRAY(Integer))
 )
 
+# create the database connection
 database = Database(DATABASE_URI)

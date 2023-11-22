@@ -8,8 +8,10 @@ from app.api.service import is_cast_present
 import logging
 logger = logging.getLogger(__name__)
 
+# Create a router for movies
 movies = APIRouter()
 
+# Create a route for creating a movie
 @movies.post('/', response_model=MovieOut, status_code=201)
 async def create_movie(payload: MovieIn):
     for cast_id in payload.casts_id:
@@ -24,6 +26,7 @@ async def create_movie(payload: MovieIn):
 
     return response
 
+# Create a route for getting all movies
 @movies.get('/', response_model=List[MovieOut])
 async def get_movies():
     logger.info("Attempting to fetch all movies")
@@ -37,6 +40,7 @@ async def get_movie(id: int):
         raise HTTPException(status_code=404, detail="Movie not found")
     return movie
 
+# Create a route for updating a movie
 @movies.put('/{id}/', response_model=MovieOut)
 async def update_movie(id: int, payload: MovieUpdate):
     logger.info(f"Attempting to update movie with id:{id}")
@@ -57,6 +61,7 @@ async def update_movie(id: int, payload: MovieUpdate):
 
     return await db_manager.update_movie(id, updated_movie)
 
+# Create a route for deleting a movie
 @movies.delete('/{id}', response_model=None)
 async def delete_movie(id: int):
     logger.info(f"Attempting to delete movie with id:{id}")
